@@ -1,0 +1,23 @@
+{
+  "formatVersion": 1,
+  "passTypeIdentifier": "pass.hotel.keypass",
+  "teamIdentifier": "88N329A6GU",
+  "organizationName": "KeyPass",
+  "description": "Clé digitale hôtel",
+  "serialNumber": "template",
+  "backgroundColor": "rgb(10, 10, 26)",
+  "foregroundColor": "rgb(212, 175, 55)",
+  "labelColor": "rgb(134, 134, 139)",
+  "generic": {
+    "primaryFields": [],
+    "secondaryFields": [],
+    "auxiliaryFields": [],
+    "headerFields": [],
+    "backFields": []
+  },
+  "barcode": {
+    "message": "placeholder",
+    "format": "PKBarcodeFormatQR",
+    "messageEncoding": "iso-8859-1"
+  }
+}
