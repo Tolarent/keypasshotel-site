@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
     let lockGranted = false;
     try { await grantAccess({ keyId, lockId: room?.lock_id, accessToken: qrToken, checkin, checkout }); lockGranted = true; } catch(e) {}
     let emailSent = false;
-    if (guest_email && pkpassBuffer) {
+    if (guest_email) {
       try { await sendKeyEmail({ to: guest_email, guestName: guest_name, hotelName: process.env.HOTEL_NAME || 'Hotel', roomNumber: room_id, checkin, checkout, zones, qrImageBuffer: qrImage, pkpassBuffer }); emailSent = true; } catch(e) {}
     }
     res.json({ ok: true, key: { keyId, guest_name, room_id, checkin, checkout, zones, passUrl }, qrImageBase64: qrImage.toString('base64'), passGenerated, lockGranted, emailSent });
