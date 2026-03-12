@@ -14,8 +14,8 @@ const TEMPLATE_DIR = path.join(__dirname, '..', 'passes', 'templates.pass');
 const OUTPUT_DIR   = path.join(__dirname, '..', 'passes', 'generated');
 const DESIGNS_DIR  = path.join(__dirname, '..', 'passes', 'designs');
 
-if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-if (!fs.existsSync(DESIGNS_DIR)) fs.mkdirSync(DESIGNS_DIR, { recursive: true });
+
+
 
 // ── Thèmes selon type de chambre ──────────────────────────────────────────────
 const ROOM_THEMES = {
@@ -193,7 +193,7 @@ async function generateQRImage(qrToken) {
 // ── Sauvegarde le design d'un hôtel (appelé depuis le dashboard) ─────────────
 function saveHotelDesign(hotelId, filename, imageBuffer) {
   const hotelDesignDir = path.join(DESIGNS_DIR, hotelId);
-  if (!fs.existsSync(hotelDesignDir)) fs.mkdirSync(hotelDesignDir, { recursive: true });
+  
   fs.writeFileSync(path.join(hotelDesignDir, filename), imageBuffer);
 }
 
