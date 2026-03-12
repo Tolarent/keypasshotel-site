@@ -10,6 +10,7 @@
     "uninstall-service": "node scripts/uninstall-service.js"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.0",
     "archiver": "^6.0.1",
     "axios": "^1.6.7",
     "better-sqlite3": "^9.4.3",
