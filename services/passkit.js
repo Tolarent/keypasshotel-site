@@ -164,10 +164,8 @@ async function generatePass({
   });
 
   const buffer   = pass.getAsBuffer();
-  const filePath = path.join(OUTPUT_DIR, `${passSerial}.pkpass`);
-  fs.writeFileSync(filePath, buffer);
 
-  return { filePath, buffer };
+  return { buffer };
 }
 
 // ── Génère le QR code image pour l'email / affichage réception ───────────────
