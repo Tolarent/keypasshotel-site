@@ -41,10 +41,10 @@ router.post('/', async (req, res) => {
       pkpassBuffer = buffer; passGenerated = true;
     } catch (e) { console.warn('[KeyPass] pkpass:', e.message); }
     let lockGranted = false;
-    try { await grantAccess({ keyId, lockId: room?.lock_id, accessToken: qrToken, checkin, checkout }); lockGranted = true; } catch(e) {}
+    try { await grantAccess({ keyId, lockId: room?.lock_id, accessToken: qrToken, checkin, checkout }); lockGranted = true; } catch(e) { console.warn('[KeyPass] Email erreur:', e.message); }
     let emailSent = false;
     if (guest_email) {
-      try { await sendKeyEmail({ to: guest_email, guestName: guest_name, hotelName: process.env.HOTEL_NAME || 'Hotel', roomNumber: room_id, checkin, checkout, zones, qrImageBuffer: qrImage, pkpassBuffer }); emailSent = true; } catch(e) {}
+      try { await sendKeyEmail({ to: guest_email, guestName: guest_name, hotelName: process.env.HOTEL_NAME || 'Hotel', roomNumber: room_id, checkin, checkout, zones, qrImageBuffer: qrImage, pkpassBuffer }); emailSent = true; } catch(e) { console.warn('[KeyPass] Email erreur:', e.message); }
     }
     res.json({ ok: true, key: { keyId, guest_name, room_id, checkin, checkout, zones, passUrl }, qrImageBase64: qrImage.toString('base64'), passGenerated, lockGranted, emailSent });
   } catch (err) { console.error(err); res.status(500).json({ ok: false, error: err.message }); }
