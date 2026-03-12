@@ -61,7 +61,7 @@ async function generatePass({
 }) {
   const certPath = path.resolve(process.env.APPLE_CERT_PATH);
   const keyPath  = path.resolve(process.env.APPLE_KEY_PATH);
-  const wwdrPath = path.resolve(process.env.APPLE_WWDR_PATH);
+  
 
   if (!fs.existsSync(certPath) || !fs.existsSync(keyPath)) {
     throw new Error('Certificats Apple Wallet manquants.');
@@ -165,9 +165,9 @@ async function generatePass({
   templateFiles['pass.json'] = Buffer.from(JSON.stringify(passJson));
 
   const pass = new PKPass(templateFiles, {
-    wwdr:       fs.readFileSync(wwdrPath),
-    signerCert: fs.readFileSync(certPath),
-    signerKey:  fs.readFileSync(keyPath),
+    wwdr: Buffer.from(process.env.APPLE_WWDR_BASE64 || "", "base64"),
+    signerCert: Buffer.from(process.env.APPLE_CERT_BASE64 || "", "base64"),
+    signerKey: Buffer.from(process.env.APPLE_KEY_BASE64 || "", "base64"),
   });
 
   const buffer   = pass.getAsBuffer();
