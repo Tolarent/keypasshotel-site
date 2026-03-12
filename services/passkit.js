@@ -59,14 +59,7 @@ async function generatePass({
   qrToken,
   passSerial,
 }) {
-  const certPath = path.resolve(process.env.APPLE_CERT_PATH);
-  const keyPath  = path.resolve(process.env.APPLE_KEY_PATH);
   
-
-  if (!fs.existsSync(certPath) || !fs.existsSync(keyPath)) {
-    throw new Error('Certificats Apple Wallet manquants.');
-  }
-
   const theme    = ROOM_THEMES[detectRoomType(roomType)] || ROOM_THEMES.standard;
   const typeLabel = detectRoomType(roomType) === 'presidentielle' ? 'SUITE PRÉSIDENTIELLE'
                   : detectRoomType(roomType) === 'suite'          ? 'SUITE'
