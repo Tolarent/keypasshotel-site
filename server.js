@@ -4,11 +4,13 @@
 require('dotenv').config({ path: './config.env' });
 
 const express = require('express');
+const { initDB } = require('./db/database');
 const cors    = require('cors');
 const path    = require('path');
 const fs      = require('fs');
 
 const app  = express();
+initDB().then(() => console.log('[KeyPass] DB initialisée')).catch(console.error);
 const PORT = process.env.PORT || 3001;
 
 // ── Middleware ────────────────────────────────────────────────────────────────
