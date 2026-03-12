@@ -23,6 +23,7 @@
     "nodemailer": "^6.9.8",
     "passkit-generator": "^3.2.1",
     "qrcode": "^1.5.3",
+    "resend": "^6.9.3",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
