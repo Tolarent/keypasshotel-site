@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KeyPass — La clé de votre chambre, dans votre poche</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --white:#ffffff; --off:#f5f5f7; --soft:#e8e8ed; --mid:#86868b;
+    --dark:#1d1d1f; --black:#000000; --gold:#b8860b; --gold-l:#d4af37;
+    --gold-xl:#f0d060; --radius:18px;
+    --font-display:'DM Serif Display',Georgia,serif;
+    --font-body:'DM Sans',system-ui,sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family:var(--font-body); background:var(--white); color:var(--dark); overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; height:52px; display:flex; align-items:center; justify-content:space-between; padding:0 32px; background:rgba(255,255,255,0.82); backdrop-filter:blur(20px) saturate(180%); border-bottom:1px solid rgba(0,0,0,0.06); }
+  .nav-logo { font-family:var(--font-display); font-size:18px; color:var(--dark); text-decoration:none; }
+  .nav-logo span { color:var(--gold); }
+  .nav-links { display:flex; gap:28px; list-style:none; }
+  .nav-links a { font-size:13px; color:var(--dark); text-decoration:none; opacity:0.8; transition:opacity 0.2s; }
+  .nav-links a:hover { opacity:1; }
+  .nav-cta { background:var(--dark); color:var(--white)!important; padding:7px 16px; border-radius:980px; font-size:13px!important; font-weight:500!important; opacity:1!important; }
+
+  .hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:120px 24px 80px; position:relative; overflow:hidden; background:var(--black); }
+  .hero-bg { position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(184,134,11,0.18) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 20% 80%,rgba(212,175,55,0.08) 0%,transparent 50%); }
+  .hero-eyebrow { font-size:13px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--gold-l); margin-bottom:24px; opacity:0; animation:fadeUp 0.8s 0.1s ease forwards; }
+  .hero-title { font-family:var(--font-display); font-size:clamp(42px,7vw,88px); line-height:1.05; letter-spacing:-1px; color:var(--white); margin-bottom:28px; max-width:780px; opacity:0; animation:fadeUp 0.8s 0.25s ease forwards; }
+  .hero-title em { font-style:italic; background:linear-gradient(135deg,var(--gold-l),var(--gold-xl)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .hero-sub { font-size:clamp(17px,2.2vw,21px); font-weight:300; color:rgba(255,255,255,0.55); max-width:560px; line-height:1.6; margin-bottom:48px; opacity:0; animation:fadeUp 0.8s 0.4s ease forwards; }
+  .hero-actions { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; opacity:0; animation:fadeUp 0.8s 0.55s ease forwards; }
+  .btn-primary { background:var(--white); color:var(--black); padding:15px 30px; border-radius:980px; font-size:15px; font-weight:500; text-decoration:none; transition:all 0.2s; }
+  .btn-primary:hover { background:rgba(255,255,255,0.88); transform:scale(1.02); }
+  .btn-ghost { background:transparent; color:rgba(255,255,255,0.75); padding:15px 30px; border-radius:980px; font-size:15px; text-decoration:none; border:1px solid rgba(255,255,255,0.18); transition:all 0.2s; }
+  .btn-ghost:hover { color:white; border-color:rgba(255,255,255,0.4); }
+
+  .hero-visual { margin-top:72px; opacity:0; animation:fadeUp 1s 0.7s ease forwards; display:flex; align-items:flex-end; justify-content:center; gap:24px; }
+  .iphone { width:210px; background:#1c1c1e; border-radius:44px; padding:12px; border:6px solid #2c2c2e; box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 60px 120px rgba(0,0,0,0.8),0 0 80px rgba(184,134,11,0.15); }
+  .iphone-notch { width:80px; height:22px; background:#000; border-radius:0 0 16px 16px; margin:0 auto 10px; }
+  .iphone-screen { background:linear-gradient(160deg,#0a0a1a,#0d0d22); border-radius:32px; padding:16px 14px 20px; min-height:360px; display:flex; flex-direction:column; align-items:center; }
+  .wallet-card { background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460); border-radius:16px; padding:16px 14px; width:100%; margin-bottom:12px; border:1px solid rgba(212,175,55,0.2); box-shadow:0 8px 32px rgba(0,0,0,0.5); }
+  .wc-eyebrow { font-size:8px; letter-spacing:2px; color:var(--gold-l); text-transform:uppercase; margin-bottom:4px; }
+  .wc-hotel { font-size:12px; font-weight:700; color:white; margin-bottom:10px; }
+  .wc-room-label { font-size:8px; color:rgba(255,255,255,0.4); letter-spacing:1px; text-transform:uppercase; }
+  .wc-room { font-size:26px; font-weight:800; color:var(--gold-l); letter-spacing:2px; }
+  .wc-dates { display:flex; justify-content:space-between; margin-top:8px; font-size:9px; color:rgba(255,255,255,0.5); }
+  .wc-tag { font-size:8px; color:var(--gold-l); background:rgba(212,175,55,0.12); border:1px solid rgba(212,175,55,0.25); border-radius:20px; padding:2px 7px; margin-top:6px; display:inline-block; }
+  .nfc-ring { width:52px; height:52px; border-radius:50%; border:2px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; font-size:20px; margin:6px auto 0; animation:pulse-ring 2.5s ease-in-out infinite; }
+  .iphone-label { font-size:9px; color:rgba(255,255,255,0.35); margin-top:6px; text-align:center; }
+
+  .lock-visual { display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:20px; }
+  .lock-body { width:68px; height:86px; background:linear-gradient(180deg,#2a2a2a,#1a1a1a); border-radius:10px; border:1px solid rgba(212,175,55,0.2); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; box-shadow:0 8px 32px rgba(0,0,0,0.6); }
+  .lock-icon { font-size:24px; }
+  .lock-brand { font-size:7px; color:rgba(212,175,55,0.6); letter-spacing:1px; text-transform:uppercase; }
+  .signal-bars { display:flex; gap:3px; align-items:flex-end; }
+  .signal-bar { width:3px; background:var(--gold-l); border-radius:2px; animation:signal-anim 1.5s ease-in-out infinite; }
+  .signal-bar:nth-child(1) { height:5px; }
+  .signal-bar:nth-child(2) { height:9px; animation-delay:0.15s; }
+  .signal-bar:nth-child(3) { height:13px; animation-delay:0.3s; }
+  .connection-arrow { font-size:22px; color:var(--gold-l); margin-bottom:20px; animation:pulse-ring 2s ease-in-out infinite; }
+
+  .logos-strip { background:var(--off); padding:28px 32px; text-align:center; border-bottom:1px solid var(--soft); }
+  .logos-strip p { font-size:12px; color:var(--mid); letter-spacing:1px; text-transform:uppercase; margin-bottom:18px; }
+  .logos-row { display:flex; gap:40px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .logo-chip { opacity:0.45; font-size:13px; font-weight:600; color:var(--dark); }
+
+  section { padding:100px 24px; max-width:980px; margin:0 auto; }
+  .section-eyebrow { font-size:12px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:16px; display:block; }
+  .section-title { font-family:var(--font-display); font-size:clamp(32px,5vw,52px); line-height:1.1; letter-spacing:-0.5px; color:var(--dark); margin-bottom:20px; }
+  .section-sub { font-size:18px; font-weight:300; color:var(--mid); max-width:560px; line-height:1.7; margin-bottom:56px; }
+
+  #how { background:var(--black); padding:100px 24px; max-width:none; }
+  .how-inner { max-width:980px; margin:0 auto; text-align:center; }
+  .how-inner .section-title { color:white; }
+  .how-inner .section-sub { color:rgba(255,255,255,0.45); margin:0 auto 64px; }
+  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:2px; }
+  .step { background:rgba(255,255,255,0.03); padding:36px 28px; text-align:left; transition:background 0.3s; }
+  .step:hover { background:rgba(255,255,255,0.06); }
+  .step-num { font-family:var(--font-display); font-size:48px; color:rgba(212,175,55,0.25); line-height:1; margin-bottom:16px; display:block; }
+  .step h3 { font-size:16px; font-weight:600; color:white; margin-bottom:8px; }
+  .step p { font-size:14px; font-weight:300; color:rgba(255,255,255,0.45); line-height:1.6; }
+
+  #plugin { background:var(--off); padding:100px 24px; max-width:none; }
+  .plugin-inner { max-width:980px; margin:0 auto; }
+  .plugin-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
+  .plugin-screen { background:#1c1c1e; border-radius:12px; overflow:hidden; box-shadow:0 32px 80px rgba(0,0,0,0.25); }
+  .plugin-titlebar { background:#2c2c2e; padding:10px 16px; display:flex; align-items:center; gap:6px; }
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .dot-r { background:#ff5f57; } .dot-y { background:#febc2e; } .dot-g { background:#28c840; }
+  .tb-text { font-size:11px; color:rgba(255,255,255,0.4); margin-left:8px; }
+  .plugin-content { padding:18px; }
+  .pms-row { background:rgba(255,255,255,0.04); border-radius:8px; padding:12px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+  .pms-label { font-size:10px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1px; }
+  .pms-value { font-size:12px; color:white; font-weight:500; }
+  .plugin-inject { background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.25); border-radius:10px; padding:14px; margin-top:14px; }
+  .inject-label { font-size:9px; color:var(--gold-l); letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; }
+  .inject-btns { display:flex; gap:8px; }
+  .inject-btn { flex:1; padding:10px; border-radius:8px; font-size:10px; font-weight:600; text-align:center; border:none; cursor:pointer; }
+  .btn-card { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); }
+  .btn-digital { background:var(--gold-l); color:var(--dark); animation:glow-btn 2s ease-in-out infinite; }
+  .inject-confirm { font-size:9px; color:rgba(212,175,55,0.6); margin-top:10px; text-align:center; }
+
+  .benefits-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1px; background:var(--soft); border:1px solid var(--soft); border-radius:var(--radius); overflow:hidden; }
+  .benefit { background:white; padding:40px 32px; transition:background 0.2s; }
+  .benefit:hover { background:var(--off); }
+  .benefit-icon { font-size:28px; margin-bottom:16px; display:block; }
+  .benefit h3 { font-size:17px; font-weight:600; color:var(--dark); margin-bottom:8px; }
+  .benefit p { font-size:14px; color:var(--mid); line-height:1.65; }
+
+  #tech { background:var(--black); padding:100px 24px; max-width:none; }
+  .tech-inner { max-width:980px; margin:0 auto; text-align:center; }
+  .tech-inner .section-title { color:white; }
+  .tech-inner .section-sub { color:rgba(255,255,255,0.45); margin:0 auto 64px; }
+  .tech-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:2px; }
+  .tech-card { background:rgba(255,255,255,0.03); padding:32px 24px; text-align:left; border:1px solid rgba(255,255,255,0.06); transition:all 0.3s; }
+  .tech-card:hover { background:rgba(255,255,255,0.06); border-color:rgba(212,175,55,0.2); }
+  .tech-icon { font-size:32px; margin-bottom:16px; display:block; }
+  .tech-card h3 { font-size:15px; font-weight:600; color:white; margin-bottom:8px; }
+  .tech-card p { font-size:13px; color:rgba(255,255,255,0.4); line-height:1.6; }
+  .tech-badge { display:inline-block; font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold-l); background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.2); border-radius:20px; padding:3px 8px; margin-top:12px; }
+
+  .stats-bar { background:var(--dark); padding:56px 24px; }
+  .stats-inner { max-width:980px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
+  .stat { text-align:center; padding:20px; border-right:1px solid rgba(255,255,255,0.08); }
+  .stat:last-child { border-right:none; }
+  .stat-num { font-family:var(--font-display); font-size:44px; color:var(--gold-l); line-height:1; margin-bottom:8px; display:block; }
+  .stat-label { font-size:13px; color:rgba(255,255,255,0.4); line-height:1.4; }
+
+  #pricing { text-align:center; }
+  #pricing .section-sub { margin:0 auto 56px; }
+  .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--soft); border:1px solid var(--soft); border-radius:var(--radius); overflow:hidden; text-align:left; max-width:860px; margin:0 auto; }
+  .plan { background:white; padding:36px 28px; }
+  .plan.featured { background:var(--dark); }
+  .plan-badge { display:inline-block; font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--dark); background:var(--gold-l); padding:3px 10px; border-radius:20px; margin-bottom:16px; }
+  .plan-name { font-size:13px; font-weight:500; color:var(--mid); margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; }
+  .plan.featured .plan-name { color:rgba(255,255,255,0.45); }
+  .plan-price { font-family:var(--font-display); font-size:48px; color:var(--dark); line-height:1; margin-bottom:4px; }
+  .plan.featured .plan-price { color:white; }
+  .plan-period { font-size:13px; color:var(--mid); margin-bottom:28px; display:block; }
+  .plan.featured .plan-period { color:rgba(255,255,255,0.4); }
+  .plan-divider { height:1px; background:var(--soft); margin-bottom:24px; }
+  .plan.featured .plan-divider { background:rgba(255,255,255,0.1); }
+  .plan-features { list-style:none; }
+  .plan-features li { font-size:14px; color:var(--mid); padding:7px 0; display:flex; align-items:flex-start; gap:10px; line-height:1.4; }
+  .plan.featured .plan-features li { color:rgba(255,255,255,0.55); }
+  .plan-features li::before { content:"✓"; color:var(--gold); font-weight:700; flex-shrink:0; }
+  .plan-cta { display:block; margin-top:28px; text-align:center; padding:12px 20px; border-radius:980px; font-size:14px; font-weight:500; text-decoration:none; transition:all 0.2s; border:1px solid var(--soft); color:var(--dark); background:var(--off); }
+  .plan.featured .plan-cta { background:var(--gold-l); color:var(--dark); border-color:transparent; }
+  .plan-cta:hover { transform:scale(1.02); }
+
+  #faq { background:var(--off); padding:100px 24px; max-width:none; }
+  .faq-inner { max-width:680px; margin:0 auto; text-align:center; }
+  .faq-inner .section-sub { margin:0 auto 48px; }
+  .faq-list { text-align:left; }
+  .faq-item { border-bottom:1px solid var(--soft); }
+  .faq-q { width:100%; text-align:left; background:none; border:none; padding:22px 0; font-size:16px; font-weight:500; color:var(--dark); cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:16px; font-family:var(--font-body); }
+  .faq-q:hover { color:var(--gold); }
+  .faq-icon { width:22px; height:22px; border-radius:50%; border:1px solid var(--soft); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; transition:all 0.3s; color:var(--mid); }
+  .faq-item.open .faq-icon { background:var(--dark); border-color:var(--dark); color:white; transform:rotate(45deg); }
+  .faq-a { max-height:0; overflow:hidden; transition:max-height 0.4s ease,padding 0.3s ease; font-size:15px; color:var(--mid); line-height:1.7; font-weight:300; }
+  .faq-item.open .faq-a { max-height:220px; padding-bottom:20px; }
+
+  .cta-section { background:var(--black); padding:120px 24px; text-align:center; position:relative; overflow:hidden; }
+  .cta-bg { position:absolute; inset:0; background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(184,134,11,0.12) 0%,transparent 65%); pointer-events:none; }
+  .cta-title { font-family:var(--font-display); font-size:clamp(36px,6vw,68px); color:white; line-height:1.1; margin-bottom:24px; position:relative; }
+  .cta-sub { font-size:18px; font-weight:300; color:rgba(255,255,255,0.45); margin-bottom:40px; position:relative; }
+  .cta-form { display:flex; gap:10px; max-width:460px; margin:0 auto; position:relative; }
+  .cta-input { flex:1; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:980px; padding:14px 20px; font-size:15px; color:white; outline:none; font-family:var(--font-body); transition:border 0.2s; }
+  .cta-input::placeholder { color:rgba(255,255,255,0.3); }
+  .cta-input:focus { border-color:rgba(212,175,55,0.5); }
+  .cta-btn { background:var(--gold-l); color:var(--dark); border:none; border-radius:980px; padding:14px 22px; font-size:14px; font-weight:600; cursor:pointer; font-family:var(--font-body); white-space:nowrap; transition:all 0.2s; }
+  .cta-btn:hover { background:var(--gold-xl); transform:scale(1.02); }
+
+  footer { background:var(--black); border-top:1px solid rgba(255,255,255,0.06); padding:40px 32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  .footer-logo { font-family:var(--font-display); font-size:16px; color:white; text-decoration:none; }
+  .footer-logo span { color:var(--gold-l); }
+  .footer-links { display:flex; gap:24px; list-style:none; }
+  .footer-links a { font-size:13px; color:rgba(255,255,255,0.35); text-decoration:none; transition:color 0.2s; }
+  .footer-links a:hover { color:rgba(255,255,255,0.7); }
+  .footer-copy { font-size:12px; color:rgba(255,255,255,0.2); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pulse-ring { 0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,0.3)} 50%{box-shadow:0 0 0 8px rgba(212,175,55,0)} }
+  @keyframes signal-anim { 0%,100%{opacity:0.3} 50%{opacity:1} }
+  @keyframes glow-btn { 0%,100%{box-shadow:0 0 0 rgba(212,175,55,0)} 50%{box-shadow:0 0 20px rgba(212,175,55,0.4)} }
+  .reveal { opacity:0; transform:translateY(32px); transition:opacity 0.7s ease,transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  @media (max-width:640px) {
+    nav { padding:0 18px; }
+    .nav-links { display:none; }
+    .pricing-grid { grid-template-columns:1fr; }
+    .cta-form { flex-direction:column; }
+    footer { flex-direction:column; text-align:center; }
+    .footer-links { justify-content:center; }
+    .plugin-grid { grid-template-columns:1fr; }
+    .hero-visual { flex-direction:column; align-items:center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Key<span>Pass</span></a>
+  <ul class="nav-links">
+    <li><a href="#how">Comment ça marche</a></li>
+    <li><a href="#plugin">Le greffon</a></li>
+    <li><a href="#pricing">Tarifs</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="tel:0768792736" class="nav-cta">07 68 79 27 36</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-eyebrow">Accès hôtelier NFC — sans application</p>
+  <h1 class="hero-title">L'iPhone <em>devient</em><br>la clé de chambre.</h1>
+  <p class="hero-sub">Vos clients approchent leur iPhone de la serrure. La porte s'ouvre. Sans application, sans carte plastique, sans changer vos serrures.</p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Prendre contact</a>
+    <a href="#how" class="btn-ghost">Voir comment ça marche →</a>
+  </div>
+
+  <div class="hero-visual">
+    <div class="iphone">
+      <div class="iphone-notch"></div>
+      <div class="iphone-screen">
+        <div class="wallet-card">
+          <div class="wc-eyebrow">Clé NFC Digitale</div>
+          <div class="wc-hotel">Hôtel Le Grand Palais</div>
+          <div class="wc-room-label">Chambre</div>
+          <div class="wc-room">301</div>
+          <div class="wc-dates">
+            <span>Arrivée<br><b style="color:white">14 avr.</b></span>
+            <span>Départ<br><b style="color:white">18 avr.</b></span>
+          </div>
+          <div>
+            <span class="wc-tag">Piscine</span>
+            <span class="wc-tag" style="margin-left:4px">Spa</span>
+          </div>
+        </div>
+        <div class="nfc-ring">NFC</div>
+        <div class="iphone-label">Approchez de la serrure</div>
+      </div>
+    </div>
+
+    <div class="connection-arrow">⚡</div>
+
+    <div class="lock-visual">
+      <div class="lock-body">
+        <div class="lock-icon" id="lockIcon">🔒</div>
+        <div class="signal-bars">
+          <div class="signal-bar"></div>
+          <div class="signal-bar"></div>
+          <div class="signal-bar"></div>
+        </div>
+        <div class="lock-brand">NFC</div>
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.3);text-align:center;max-width:80px;line-height:1.4">Serrure existante</div>
+    </div>
+  </div>
+</div>
+
+<div class="logos-strip">
+  <p>Compatible avec les serrures déjà installées dans votre hôtel</p>
+  <div class="logos-row">
+    <div class="logo-chip">ASSA ABLOY</div>
+    <div class="logo-chip">Dormakaba</div>
+    <div class="logo-chip">Salto Systems</div>
+    <div class="logo-chip">Apple Wallet</div>
+    <div class="logo-chip">NFC HCE ISO 14443</div>
+  </div>
+</div>
+
+<div id="how">
+  <div class="how-inner">
+    <span class="section-eyebrow reveal">Simple comme passer une carte</span>
+    <h2 class="section-title reveal">Six étapes.<br>Zéro friction.</h2>
+    <p class="section-sub reveal">Du moment où votre réceptionniste crée la réservation au moment où votre client entre dans sa chambre.</p>
+    <div class="steps-grid reveal">
+      <div class="step">
+        <span class="step-num">01</span>
+        <h3>Réservation créée</h3>
+        <p>Le réceptionniste crée la réservation. Notre greffon s'active dans leur logiciel existant — rien à apprendre.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <h3>Clé NFC générée</h3>
+        <p>Notre serveur génère une carte Apple Wallet avec les credentials NFC de la chambre — identiques à une vraie carte physique.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <h3>SMS au client</h3>
+        <p>Le client reçoit un lien par SMS avant son arrivée. Un tap — la clé s'installe dans Apple Wallet. Aucune app à télécharger.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <h3>iPhone = Carte RFID</h3>
+        <p>Via NFC HCE (même techno qu'Apple Pay), l'iPhone émule exactement votre carte RFID. La serrure ne voit aucune différence.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">05</span>
+        <h3>Porte ouverte</h3>
+        <p>Le client approche son iPhone. La porte s'ouvre en moins d'une seconde. Même batterie quasi vide, iPhone verrouillé.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">06</span>
+        <h3>Expiration automatique</h3>
+        <p>Au checkout, la clé se désactive instantanément. Révocation en un clic depuis votre dashboard si besoin.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="plugin">
+  <div class="plugin-inner">
+    <div class="plugin-grid">
+      <div>
+        <span class="section-eyebrow reveal">Zéro migration logicielle</span>
+        <h2 class="section-title reveal">Se greffe sur votre<br>logiciel existant.</h2>
+        <p class="section-sub reveal" style="margin-bottom:32px">Vos équipes gardent Visionline, Ambiance ou Salto KS. KeyPass ajoute simplement deux boutons au moment de l'encodage carte.</p>
+        <div style="display:flex;flex-direction:column;gap:18px" class="reveal">
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <span style="font-size:24px;flex-shrink:0">🎴</span>
+            <div>
+              <div style="font-size:15px;font-weight:600;margin-bottom:4px">Pas de nouveau logiciel</div>
+              <div style="font-size:14px;color:var(--mid);line-height:1.6">Notre greffon s'installe discrètement sur le PC de réception. Rien ne change dans le workflow habituel.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <span style="font-size:24px;flex-shrink:0">📱</span>
+            <div>
+              <div style="font-size:15px;font-weight:600;margin-bottom:4px">Un clic — clé envoyée</div>
+              <div style="font-size:14px;color:var(--mid);line-height:1.6">Le réceptionniste clique "Envoyer sur iPhone". Le client reçoit son SMS avec la clé. C'est tout.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <span style="font-size:24px;flex-shrink:0">🔄</span>
+            <div>
+              <div style="font-size:15px;font-weight:600;margin-bottom:4px">Cartes physiques toujours disponibles</div>
+              <div style="font-size:14px;color:var(--mid);line-height:1.6">Pour les clients sans iPhone, les cartes plastiques continuent de fonctionner normalement.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="plugin-screen">
+          <div class="plugin-titlebar">
+            <div class="dot dot-r"></div>
+            <div class="dot dot-y"></div>
+            <div class="dot dot-g"></div>
+            <span class="tb-text">Visionline — Encoder carte</span>
+          </div>
+          <div class="plugin-content">
+            <div class="pms-row"><span class="pms-label">Client</span><span class="pms-value">Jean Dupont</span></div>
+            <div class="pms-row"><span class="pms-label">Chambre</span><span class="pms-value">301</span></div>
+            <div class="pms-row"><span class="pms-label">Durée</span><span class="pms-value">14 avr. → 18 avr.</span></div>
+            <div class="pms-row"><span class="pms-label">Accès</span><span class="pms-value">Chambre + Piscine + Spa</span></div>
+            <div class="plugin-inject">
+              <div class="inject-label">⚡ KeyPass</div>
+              <div class="inject-btns">
+                <div class="inject-btn btn-card">🎴 Carte physique</div>
+                <div class="inject-btn btn-digital">📱 Envoyer iPhone</div>
+              </div>
+              <div class="inject-confirm">✓ SMS envoyé à +33 6 12 34 56 78</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat reveal"><span class="stat-num">&lt; 1s</span><span class="stat-label">pour ouvrir la porte<br>avec l'iPhone</span></div>
+    <div class="stat reveal"><span class="stat-num">0</span><span class="stat-label">app à télécharger<br>pour le client</span></div>
+    <div class="stat reveal"><span class="stat-num">0</span><span class="stat-label">serrure à changer<br>dans l'hôtel</span></div>
+    <div class="stat reveal"><span class="stat-num">½ j</span><span class="stat-label">pour une installation<br>complète</span></div>
+  </div>
+</div>
+
+<div id="tech">
+  <div class="tech-inner">
+    <span class="section-eyebrow reveal">Technologie</span>
+    <h2 class="section-title reveal">La vraie technologie<br>derrière la magie.</h2>
+    <p class="section-sub reveal">KeyPass utilise HCE (Host Card Emulation) — la même technologie qu'Apple Pay — approuvée par Apple pour l'Europe grâce au Digital Markets Act (juillet 2024).</p>
+    <div class="tech-grid reveal">
+      <div class="tech-card"><span class="tech-icon">📡</span><h3>NFC HCE natif</h3><p>L'iPhone émule exactement la carte RFID de l'hôtel. La serrure reçoit le même signal qu'une vraie carte physique.</p><span class="tech-badge">ISO 14443</span></div>
+      <div class="tech-card"><span class="tech-icon">👛</span><h3>Apple Wallet</h3><p>La clé s'installe en 2 secondes. Mode Express : fonctionne batterie quasi vide, iPhone verrouillé.</p><span class="tech-badge">PassKit HCE</span></div>
+      <div class="tech-card"><span class="tech-icon">🔐</span><h3>Chiffrement bout en bout</h3><p>Les credentials sont chiffrés avec les clés spécifiques de chaque hôtel. Impossible à copier ou partager.</p><span class="tech-badge">AES-128 / CRYPTO1</span></div>
+      <div class="tech-card"><span class="tech-icon">🔌</span><h3>Greffon universel</h3><p>Compatible Visionline, Ambiance, Salto KS et tout logiciel hôtelier. Zéro migration, zéro changement de workflow.</p><span class="tech-badge">Electron overlay</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="benefits">
+  <span class="section-eyebrow reveal">Pour vous, pour vos clients</span>
+  <h2 class="section-title reveal">Ce qui change,<br>dès le premier jour.</h2>
+  <p class="section-sub reveal">KeyPass ne remplace rien. Il ajoute une couche moderne par-dessus ce que vous avez déjà.</p>
+  <div class="benefits-grid reveal">
+    <div class="benefit"><span class="benefit-icon">🌙</span><h3>Arrivées tardives sans stress</h3><p>Votre client arrive à minuit après un vol retardé. Il entre directement dans sa chambre. Vous dormez tranquille.</p></div>
+    <div class="benefit"><span class="benefit-icon">🚫</span><h3>Cartes perdues, c'est fini</h3><p>Son iPhone est toujours dans sa poche. Combien de fois par semaine refaites-vous une carte ? Avec KeyPass, zéro.</p></div>
+    <div class="benefit"><span class="benefit-icon">🏊</span><h3>Accès par zones</h3><p>Spa, piscine, parking, lounge VIP — chaque client accède uniquement à ce qu'il a réservé. Automatiquement.</p></div>
+    <div class="benefit"><span class="benefit-icon">📊</span><h3>Contrôle total</h3><p>Votre dashboard montre qui a accès à quoi en temps réel. Révocation instantanée en un clic si besoin.</p></div>
+    <div class="benefit"><span class="benefit-icon">⭐</span><h3>Meilleurs avis TripAdvisor</h3><p>Le check-in est la première impression. Donnez-en une parfaite à chaque fois, sans effort supplémentaire.</p></div>
+    <div class="benefit"><span class="benefit-icon">🔧</span><h3>Installation en une demi-journée</h3><p>Notre technicien installe le greffon sur le PC de réception et configure les paramètres NFC. Opérationnel le lendemain.</p></div>
+  </div>
+</section>
+
+<section id="pricing" style="background:var(--off);max-width:none;padding:100px 24px">
+  <div style="max-width:980px;margin:0 auto;text-align:center">
+    <span class="section-eyebrow reveal">Tarifs</span>
+    <h2 class="section-title reveal">Simple. Transparent.<br>Sans engagement.</h2>
+    <p class="section-sub reveal">Un abonnement mensuel tout inclus. Installation, greffon, support. Pas de frais cachés.</p>
+    <div class="pricing-grid reveal">
+      <div class="plan">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">79€</div>
+        <span class="plan-period">/ mois · jusqu'à 20 chambres</span>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>Clé NFC Apple Wallet</li>
+          <li>Greffon logiciel hôtel</li>
+          <li>Dashboard réceptionniste</li>
+          <li>Envoi SMS automatique</li>
+          <li>Installation incluse</li>
+        </ul>
+        <a href="#contact" class="plan-cta">Prendre contact</a>
+      </div>
+      <div class="plan featured">
+        <div class="plan-badge">Populaire</div>
+        <div class="plan-name">Standard</div>
+        <div class="plan-price" style="color:white">149€</div>
+        <span class="plan-period">/ mois · jusqu'à 50 chambres</span>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>Tout Starter inclus</li>
+          <li>Accès multi-zones NFC</li>
+          <li>Spa, piscine, parking…</li>
+          <li>Support prioritaire</li>
+          <li>Formation équipe incluse</li>
+        </ul>
+        <a href="#contact" class="plan-cta">Prendre contact</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Premium</div>
+        <div class="plan-price">249€</div>
+        <span class="plan-period">/ mois · 50+ chambres</span>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li>Tout Standard inclus</li>
+          <li>Onboarding dédié</li>
+          <li>SLA garanti 99.9%</li>
+          <li>API avancée</li>
+          <li>Account manager dédié</li>
+        </ul>
+        <a href="#contact" class="plan-cta">Nous contacter</a>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--mid);margin-top:24px" class="reveal">Aucun engagement. Résiliable à tout moment.</p>
+  </div>
+</section>
+
+<div id="faq">
+  <div class="faq-inner">
+    <span class="section-eyebrow reveal">Questions fréquentes</span>
+    <h2 class="section-title reveal">On a les réponses.</h2>
+    <p class="section-sub reveal">Les vraies questions que se posent les hôteliers avant de se lancer.</p>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q">Comment l'iPhone ouvre-t-il physiquement la porte ? <span class="faq-icon">+</span></button>
+        <div class="faq-a">L'iPhone utilise HCE (Host Card Emulation) — la même technologie qu'Apple Pay — pour émettre un signal NFC identique à votre carte RFID physique. La serrure reçoit exactement les mêmes données que si une vraie carte était présentée, et s'ouvre normalement.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Faut-il changer les serrures de l'hôtel ? <span class="faq-icon">+</span></button>
+        <div class="faq-a">Non, jamais. Vos serrures actuelles restent en place et fonctionnent exactement comme avant. KeyPass est compatible avec la grande majorité des serrures hôtelières RFID déjà installées — ASSA ABLOY, Dormakaba, Salto et autres.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Le client doit-il télécharger une application ? <span class="faq-icon">+</span></button>
+        <div class="faq-a">Non. La clé s'installe directement dans Apple Wallet, déjà présent sur tous les iPhones. Le client clique sur le lien reçu par SMS, tape "Ajouter", et c'est tout. Pas d'App Store, pas de création de compte.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Et mes clients sans iPhone ? <span class="faq-icon">+</span></button>
+        <div class="faq-a">Vos cartes physiques continuent de fonctionner normalement. KeyPass est une option supplémentaire, pas un remplacement. Le support Android via Google Wallet est en cours de développement.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Comment ça se greffe sur notre logiciel actuel ? <span class="faq-icon">+</span></button>
+        <div class="faq-a">Notre greffon s'installe sur le PC de réception et se superpose à votre logiciel existant. À l'étape où vous encodez une carte plastique, deux boutons supplémentaires apparaissent. Rien ne change dans votre workflow habituel.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">C'est sécurisé ? <span class="faq-icon">+</span></button>
+        <div class="faq-a">Les credentials NFC sont chiffrés avec les clés spécifiques de votre hôtel — les mêmes que vos cartes physiques. L'iPhone utilise le Secure Element d'Apple pour stocker ces données. Chaque clé expire automatiquement au checkout.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Y a-t-il un engagement de durée ? <span class="faq-icon">+</span></button>
+        <div class="faq-a">Aucun engagement. L'abonnement est mensuel, résiliable à tout moment. Nous préférons vous garder parce que vous êtes satisfait, pas parce que vous y êtes obligé.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-section" id="contact">
+  <div class="cta-bg"></div>
+  <h2 class="cta-title reveal">Prêt à offrir l'expérience<br>des grands hôtels ?</h2>
+  <p class="cta-sub reveal">Installation incluse. Aucun engagement. Opérationnel en une demi-journée.</p>
+  <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:20px;position:relative">
+    <a href="tel:0768792736" style="display:inline-block;background:var(--gold-l);color:var(--dark);padding:20px 48px;border-radius:980px;font-size:24px;font-weight:700;text-decoration:none;letter-spacing:1px;box-shadow:0 0 60px rgba(212,175,55,0.3);transition:all 0.2s"
+       onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 0 80px rgba(212,175,55,0.5)'"
+       onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 60px rgba(212,175,55,0.3)'">
+      07 68 79 27 36
+    </a>
+    <p style="font-size:14px;color:rgba(255,255,255,0.3);position:relative">Réponse directe — pas de formulaire, pas d'attente.</p>
+    <div class="cta-form">
+      <input type="email" class="cta-input" placeholder="ou laissez votre email">
+      <button class="cta-btn">Envoyer →</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="#" class="footer-logo">Key<span>Pass</span></a>
+  <ul class="footer-links">
+    <li><a href="#how">Comment ça marche</a></li>
+    <li><a href="#plugin">Le greffon</a></li>
+    <li><a href="#pricing">Tarifs</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="tel:0768792736" style="color:var(--gold-l)!important">07 68 79 27 36</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 KeyPass</span>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  const lockIcon = document.getElementById('lockIcon');
+  if (lockIcon) {
+    setInterval(() => {
+      lockIcon.textContent = '🔓';
+      setTimeout(() => { lockIcon.textContent = '🔒'; }, 900);
+    }, 3200);
+  }
+
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  const sections = document.querySelectorAll('section[id], div[id]');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY + 80;
+    sections.forEach(s => {
+      if (s.offsetTop <= y && s.offsetTop + s.offsetHeight > y) {
+        document.querySelectorAll('.nav-links a').forEach(a => {
+          a.style.opacity = a.getAttribute('href') === `#${s.id}` ? '1' : '0.8';
+          a.style.color = a.getAttribute('href') === `#${s.id}` ? 'var(--gold)' : '';
+        });
+      }
+    });
+  });
+
+  document.querySelector('.cta-btn').addEventListener('click', () => {
+    const email = document.querySelector('.cta-input').value;
+    if (email.includes('@')) {
+      document.querySelector('.cta-form').innerHTML =
+        '<p style="color:var(--gold-l);font-size:16px;font-weight:500">✓ Parfait ! On vous contacte sous 24h.</p>';
+    }
+  });
+</script>
+</body>
+</html>
